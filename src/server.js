@@ -1,16 +1,15 @@
 import express from 'express';
 import nodemailer from 'nodemailer';
 import { config } from 'dotenv';
-import serverless from 'serverless-http';
 import cors from 'cors';
 
 config();
 
 const app = express();
 
-// Configuração do CORS para permitir chamadas do frontend
+// Habilitar CORS para permitir chamadas de diferentes origens
 const corsOptions = {
-  origin: '*',
+  origin: '*',  // Permite qualquer origem. Pode ser ajustado conforme necessidade
 };
 
 app.use(cors(corsOptions));
@@ -25,7 +24,6 @@ app.get('/', (req, res) => {
 app.post('/sendEmail', async (req, res) => {
   const { nome, email, message } = req.body;
 
-  // Validações mínimas
   if (!nome || !email || !message) {
     return res.status(400).json({ status: 'Por favor, preencha todos os campos.' });
   }
@@ -42,13 +40,12 @@ app.post('/sendEmail', async (req, res) => {
 
   // Tentando enviar o e-mail
   try {
-    // Usando um corpo simples de texto para minimizar o processamento
     const info = await transporter.sendMail({
       from: `Portfólio <${process.env.USER_MAIL}>`, // Remetente
       to: process.env.USER_MAIL, // Enviar para o e-mail configurado no .env
       cc: email, // Enviar também para o e-mail fornecido no corpo
       subject: `Olá, sou ${nome}`, // Assunto do e-mail
-      text: `Mensagem de contato de ${nome}:\n\n${message}`, // Corpo simples de texto JESUSSSSS
+      text: `Mensagem de contato de ${nome}:\n\n${message}`, // Corpo simples de texto
     });
 
     console.log('E-mail enviado com sucesso:', info.response);
@@ -59,4 +56,7 @@ app.post('/sendEmail', async (req, res) => {
   }
 });
 
-export default serverless(app);
+// Iniciar servidor localmente
+app.listen(8080, () => {
+  console.log('Servidor Express rodando na porta 8080');
+});
