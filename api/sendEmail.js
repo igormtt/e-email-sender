@@ -1,21 +1,15 @@
+import express from 'express';
 import nodemailer from 'nodemailer';
 import { config } from 'dotenv';
+import serverless from 'serverless-http'; 
+
 
 config();
 
-export default async function handler(req, res) {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+const app = express();
+app.use(express.json()); 
 
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
-
-  if (req.method !== 'POST') {
-    return res.status(405).json({ status: 'Método não permitido' });
-  }
-
+app.post('/sendEmail', async (req, res) => {
   const { nome, email, message } = req.body;
 
   if (!nome || !email || !message) {
@@ -43,9 +37,8 @@ export default async function handler(req, res) {
     return res.status(200).json({ status: 'E-mail enviado com sucesso!' });
   } catch (err) {
     console.error('Erro ao enviar o e-mail:', err);
-    return res.status(500).json({ 
-      status: 'Houve um erro ao enviar o e-mail. Tente novamente.',
-      error: err.message 
-    });
+    return res.status(500).json({ status: 'Houve um erro ao enviar o e-mail. Tente novamente.' });
   }
-}
+});
+
+export default serverless(app);
