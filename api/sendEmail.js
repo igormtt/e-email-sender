@@ -122,4 +122,4 @@ app.listen(8080, () => {
   console.log('Rodando')
 })
 
-export default serverless(app);
+export default app;
