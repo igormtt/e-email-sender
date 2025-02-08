@@ -12,7 +12,9 @@ const app = express();
 const corsOptions = {
   origin: '*',  
   methods: ['GET', 'POST'], 
-  allowedHeaders: ['Content-Type'], 
+  allowedHeaders: ['Content-Type', 'Authorization'],  
+  preflightContinue: false,
+  optionsSuccessStatus: 200,  
 };
 
 app.use(cors(corsOptions));
