@@ -2,11 +2,14 @@ import express from 'express';
 import nodemailer from 'nodemailer';
 import { config } from 'dotenv';
 import serverless from 'serverless-http'; 
-
+import cors from 'cors';  
 
 config();
 
 const app = express();
+
+app.use(cors()); 
+
 app.use(express.json()); 
 
 app.post('/sendEmail', async (req, res) => {
