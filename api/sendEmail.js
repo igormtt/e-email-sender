@@ -15,7 +15,7 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization'],  
   preflightContinue: false,
   optionsSuccessStatus: 200,  
-};
+}; // Atualizando as propriedades de CORS
 
 app.use(cors(corsOptions));
 
