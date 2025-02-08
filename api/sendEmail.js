@@ -8,18 +8,20 @@ config();
 
 const app = express();
 
-
 const corsOptions = {
   origin: '*',  
-  methods: ['GET', 'POST'], 
-  allowedHeaders: ['Content-Type', 'Authorization'],  
-  preflightContinue: false,
-  optionsSuccessStatus: 200,  
-}; // Atualizando as propriedades de CORS
+}; 
+
 
 app.use(cors(corsOptions));
 
 app.use(express.json()); 
+
+app.get('/', (req, res) => {
+  res.send({
+    api: "API - Node Mailer"
+  })
+})
 
 app.post('/sendEmail', async (req, res) => {
   const { nome, email, message } = req.body;
