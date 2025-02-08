@@ -1,0 +1,7 @@
+{
+  "functions": {
+    "api/sendEmail.js": {
+      "timeout": 30
+    }
+  }
+}

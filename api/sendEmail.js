@@ -1,32 +1,31 @@
 import express from 'express';
 import nodemailer from 'nodemailer';
 import { config } from 'dotenv';
-import serverless from 'serverless-http'; 
-import cors from 'cors';  
+import serverless from 'serverless-http';
+import cors from 'cors';
 
 config();
 
 const app = express();
 
-// Configuração do CORS
+// Configuração do CORS para permitir chamadas do frontend
 const corsOptions = {
-  origin: '*',  
-}; 
+  origin: '*',
+};
 
 app.use(cors(corsOptions));
-app.use(express.json()); 
+app.use(express.json());
 
-// Teste de endpoint
+// Endpoint de teste
 app.get('/', (req, res) => {
-  res.send({
-    api: "API - Node Mailer"
-  })
+  res.send({ api: 'API - Node Mailer' });
 });
 
-// Endpoint para enviar e-mail
+// Função para enviar e-mail
 app.post('/sendEmail', async (req, res) => {
   const { nome, email, message } = req.body;
 
+  // Validações mínimas
   if (!nome || !email || !message) {
     return res.status(400).json({ status: 'Por favor, preencha todos os campos.' });
   }
@@ -41,15 +40,18 @@ app.post('/sendEmail', async (req, res) => {
     },
   });
 
+  // Tentando enviar o e-mail
   try {
-    await transporter.sendMail({
-      from: `Portfólio <${process.env.USER_MAIL}>`,
-      to: process.env.USER_MAIL,
-      cc: email,
-      subject: `Olá, sou ${nome}`,
-      html: `...seu conteúdo HTML aqui...`, // conteúdo HTML do e-mail
+    // Usando um corpo simples de texto para minimizar o processamento
+    const info = await transporter.sendMail({
+      from: `Portfólio <${process.env.USER_MAIL}>`, // Remetente
+      to: process.env.USER_MAIL, // Enviar para o e-mail configurado no .env
+      cc: email, // Enviar também para o e-mail fornecido no corpo
+      subject: `Olá, sou ${nome}`, // Assunto do e-mail
+      text: `Mensagem de contato de ${nome}:\n\n${message}`, // Corpo simples de texto
     });
 
+    console.log('E-mail enviado com sucesso:', info.response);
     return res.status(200).json({ status: 'E-mail enviado com sucesso!' });
   } catch (err) {
     console.error('Erro ao enviar o e-mail:', err);
@@ -57,5 +59,4 @@ app.post('/sendEmail', async (req, res) => {
   }
 });
 
-// Exporta a função serverless para Vercel
 export default serverless(app);
