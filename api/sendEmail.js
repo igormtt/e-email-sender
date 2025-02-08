@@ -48,7 +48,7 @@ app.post('/sendEmail', async (req, res) => {
       to: process.env.USER_MAIL, // Enviar para o e-mail configurado no .env
       cc: email, // Enviar também para o e-mail fornecido no corpo
       subject: `Olá, sou ${nome}`, // Assunto do e-mail
-      text: `Mensagem de contato de ${nome}:\n\n${message}`, // Corpo simples de texto
+      text: `Mensagem de contato de ${nome}:\n\n${message}`, // Corpo simples de texto JESUSSSSS
     });
 
     console.log('E-mail enviado com sucesso:', info.response);
